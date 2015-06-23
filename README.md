@@ -15,3 +15,4 @@ A lot of the scripts written here are built on the following publicly software:
 * [RepeatMasker] (http://www.repeatmasker.org/)
 * [HyperBrowser] (https://hyperbrowser.uio.no/hb/)
 * [GNU Parallel] (https://www.gnu.org/software/parallel/)
+* [BedTools] (https://github.com/arq5x/bedtools2)
