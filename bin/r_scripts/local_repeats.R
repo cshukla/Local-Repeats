@@ -1,3 +1,5 @@
+library(ggplot2)
+
 hg19_lncrnas <- read.table("Downloads/hg19_lncRNAs.genes_df.txt", sep="\t", header=T)
 hg19_lncrnas$Length <- abs(hg19_lncrnas$End - hg19_lncrnas$Start)
 hg19_lncrnas$LPN <- (1000*hg19_lncrnas$Local.Repeats)/hg19_lncrnas$Length
