@@ -32,22 +32,26 @@ def main():
 	# Combine all repeats in 1 file
 	############################################
 
-	all_repeats = open('all_repeats.rs', 'w')
+	all_repeats = 'all_repeats.rs'
+	all_repeats_file = open(all_repeats, 'w')
 	for repeatscout_output in glob.glob('*.repeatscout'):
 		locus_name = repeatscout_output.split('.')[0]
 		for line in open(repeatscout_output):
 			if line[0]=='>':
 				repeat_number = line.strip()[1:]
 				repeatname = '>' + locus_name + '_' + repeat_number
-				print >> all_repeats, repeatname
+				print >> all_repeats_file, repeatname
 			else:
-				print >> all_repeats, line.strip()
+				print >> all_repeats_file, line.strip()
+
+	all_repeats_file.close()
 
 	############################################
 	# Find and filter tandem repeats
 	############################################
 
-	#filter_tandem_repeats(masked_file, filtered_output)
+	masked_file = mask_tandem_repeats(all_repeats)
+	filter_tandem_repeats(masked_file)
 
 def get_repeats(chromosome, start, end, genome_fasta):
 
@@ -85,7 +89,15 @@ def make_fasta(chromosome, start, end, genome_fasta, locus_name):
 
 	return sequence_file
 
-def filter_tandem_repeats(masked_file, filtered_output):
+def mask_tandem_repeats(all_repeats):
+	masked_file = 'all_repeats.masked.rs'
+	subprocess.call('trf %s 2 7 7 80 10 50 500 -f -d -m' %(all_repeats) , shell = True)
+	subprocess.call('rm *.dat', shell=True)
+	subprocess.call('rm *.html', shell=True)
+	subprocess.call('mv *.mask %s' %(masked_file), shell=True)
+	return masked_file
+
+def filter_tandem_repeats(masked_file):
 	repeat_sequences = {}
 	for line in open(masked_file):
 		if line[0]=='>':
@@ -96,12 +108,15 @@ def filter_tandem_repeats(masked_file, filtered_output):
 			repeat_sequence += line.strip()
 			repeat_sequences[repeat_name]+= repeat_sequence
 
+	filtered_output = 'all_repeats.filtered.rs'
 	filtered_output_file = open(filtered_output, 'w')
 	for repeat in sorted(repeat_sequences.keys()):
 		sequence = repeat_sequences[repeat]
 		if sequence.find('N') == -1:
 			print >> filtered_output_file, repeat
 			print >> filtered_output_file, sequence
+
+	filtered_output_file.close()
 
 ################################################################################
 #
