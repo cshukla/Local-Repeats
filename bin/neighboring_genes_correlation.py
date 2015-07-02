@@ -75,6 +75,7 @@ def main():
         print >> out_file, '\t'.join(['Pearson', 'p_val'])
     else:
         print >> sys.stderr, 'Currently only pearson and spearman correlation are supported'
+        exit(0)
 
     ############################################
     # Compute correlation coefficient
