@@ -53,6 +53,14 @@ def main():
 	masked_file = mask_tandem_repeats(all_repeats)
 	filter_tandem_repeats(masked_file)
 
+################################################################################
+# get_repeats()
+# 
+# This function inputs the location and FASTA file of the genome. The output is
+# a fasta file of the RepeatScout output detailing all repeats found in the 
+# location.
+################################################################################
+
 def get_repeats(chromosome, start, end, genome_fasta):
 
 	############################################
@@ -70,6 +78,13 @@ def get_repeats(chromosome, start, end, genome_fasta):
 
 	subprocess.call('build_lmer_table -l 16 -sequence %s -freq %s' %(sequence_file, lmer_file), shell=True)
 	subprocess.call('RepeatScout -sequence %s -output %s -freq %s -l 16' %(sequence_file, repeats_file, lmer_file), shell=True)
+
+################################################################################
+# make_fasta()
+# 
+# This function inputs the location, locus name and FASTA file of the genome. 
+# The output is a fasta file of the location saved by the locus name.
+################################################################################
 
 def make_fasta(chromosome, start, end, genome_fasta, locus_name):
 	feature_gtf_fd, feature_gtf = tempfile.mkstemp()
@@ -89,6 +104,13 @@ def make_fasta(chromosome, start, end, genome_fasta, locus_name):
 
 	return sequence_file
 
+################################################################################
+# mask_tandem_repeats()
+# 
+# The input is a fasta file of sequences. The output is a fasta file in which
+# tandem repeats are masked.
+################################################################################
+
 def mask_tandem_repeats(all_repeats):
 	masked_file = 'all_repeats.masked.rs'
 	subprocess.call('trf %s 2 7 7 80 10 50 500 -f -d -m' %(all_repeats) , shell = True)
@@ -96,6 +118,13 @@ def mask_tandem_repeats(all_repeats):
 	subprocess.call('rm *.html', shell=True)
 	subprocess.call('mv *.mask %s' %(masked_file), shell=True)
 	return masked_file
+
+################################################################################
+# filter_tandem_repeats()
+# 
+# The function inputs a FASTA file with tandem repeats masked by N's. The output
+# is a FASTA file in which sequences with any tandem repeats are filtered.
+################################################################################
 
 def filter_tandem_repeats(masked_file):
 	repeat_sequences = {}
