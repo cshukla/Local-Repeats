@@ -35,7 +35,12 @@ def main():
     # get neighboring genes
     ############################################
 
-    neighboring_genes_fd, neighboring_genes_file = get_neighbors(input_bed, options.target_bed)
+    if os.path.isfile(target_bed) is True:
+        neighboring_genes_fd, neighboring_genes_file = get_neighbors(input_bed, options.target_bed)
+    else:
+        print >> sys.stderr, 'Target BED file does not exist.'
+        print >> sys.stderr, 'Without target BED, the script can not proceed. Exiting now...'
+        exit(1)
     
     ############################################
     # map the input genes and neighboring genes
