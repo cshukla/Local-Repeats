@@ -7,8 +7,9 @@ import os, sys
 # filter_rm_gff.py
 #
 # This script filters the GFF file obtained by running
-# RepeatMasker. Currently, I am using 2 filters to remove
-# unwanted entries.
+# RepeatMasker. There is also an option to split the final
+# filtered file by repeat name. Currently, I am using two
+# filters to remove unwanted entries. 
 #
 # Filter 1: Remove any entries longer than the consensus 
 # repeat sequence length.
@@ -21,12 +22,14 @@ import os, sys
 # other with both the filters applied. Output the format in
 # GFF file format.
 #
+#
 # Future options: Add a filter based on score?
 #############################################################
 def main():
 	usage = 'usage:%prog [options] <gff_file> <repeat_lengths>'
 	parser = OptionParser(usage)
 	parser.add_option('-o', default='rm_output', dest='output_pre', help='Prefix of the output files. Default: %default')
+	parser.add_option('-s', action='store_true', dest='split', help='Do you want to split the filtered GFF file by repeat name. Default: False')
 	(options, args) = parser.parse_args()
 
 	if len(args)!=2:
@@ -47,9 +50,6 @@ def main():
 		repeat_name, length = a[0], int(a[1])
 		repeat_lengths[repeat_name] = length
 
-	#print >> sys.stderr, 'Generated hash table with repeat lengths.'
-	#print >> sys.stderr, 'Filtering BED file now.'
-
 	# read the bed file and filter entries
 	for line in open(gff_file):
 		a = line.strip().split('\t')
@@ -58,7 +58,6 @@ def main():
 		name = name.split(':')[1].split('\"')[0]
 		repeat_length = repeat_lengths[name]
 		feature_length =  abs(int(end) - int(start))
-		#print feature_length, repeat_length
 		if feature_length <= repeat_length:
 			filter_1_line = '\t'.join([chrom, 'InHouse', 'Repeat', start, end, '.', strand, '.', name])
 			print >> filter_1_file, filter_1_line
@@ -76,7 +75,29 @@ def main():
 	filter_1_file.close()
 	filter_2_file.close()
 	discard_entries_file.close()
-	#print >> sys.stderr, 'Done. Check output'
+
+	if options.split:
+		print >> sys.stderr, 'Splitting filtered GFF file by repeat name...'
+		split_gff(options.output_pre + '_final_filtered.gff')
+
+def split_gff(input_gff):
+	input_dir = input_dir = '/'.join(input_gff.split('/')[:-1])
+	file_name = input_gff.split('/')[-1].split('.')[0]
+	output_dir = '/'.join([input_dir, file_name])
+	if not os.path.exists(output_dir):
+		os.makedirs(output_dir)
+
+	repeats = {}
+	for line in open(input_gff):
+		a = line.strip().split('\t')
+		repeat_name = a[-1]
+		if repeat_name not in repeats:
+			repeat_file = '/'.join(output_dir, repeat_name)
+			repeats[repeat_name] = open(repeat_file + '.gff', 'w')
+		print >> repeats[repeat_name], line.strip()
+
+	for repeat_name in repeats.keys():
+		repeats[repeat_name].close()
 
 #########################################################
 # main()
