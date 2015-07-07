@@ -14,11 +14,11 @@ This repo contains code I have written to analyze hundreds of local repeats foun
 
 **Future things to Do (Updated - 6/24/15):**
 
-* Make dot plot of mouse LRs versus human LRs. See if there are any similarities.
+~~* Make dot plot of mouse LRs versus human LRs. See if there are any similarities.~~
 * Distribution of exonic LRs in lncRNA transcripts. Are there lncRNA transcripts with only exonic LRs?
 * Get expression correlation of 5,000 ranodm pairs of neighboring mRNAs and compare that distribution to correlation of LR lncRNAs with their neighbor
 * Control for expression level while computing specificity.
-* Plot ratio of H3K4Me1/H3K4Me3 across body of LRs and test potential eRNAs in various methods.
+~~* Plot ratio of H3K4Me1/H3K4Me3 across body of LRs and test potential eRNAs in various methods.~~
 
 
 A lot of the scripts written here are built on the following publicly available software:
