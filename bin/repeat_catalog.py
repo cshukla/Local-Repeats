@@ -131,11 +131,9 @@ def filter_tandem_repeats(masked_file):
 	for line in open(masked_file):
 		if line[0]=='>':
 			repeat_name = line.strip()
-			repeat_sequence = ''
-			repeat_sequences[repeat_name] = repeat_sequence
+			repeat_sequences[repeat_name] = ''
 		else:
-			repeat_sequence += line.strip()
-			repeat_sequences[repeat_name]+= repeat_sequence
+			repeat_sequences[repeat_name]+= line.strip()
 
 	filtered_output = 'all_repeats.filtered.rs'
 	filtered_output_file = open(filtered_output, 'w')
