@@ -6,7 +6,7 @@ This repo contains code I have written to analyze hundreds of local repeats foun
 
 * In both the mouse and human genome, local repeats are significantly enriched in lncRNAs compared to mRNAs.
 * Local repeat rich lncRNAs (LR lncRNAs) are longer, have more isoforms, exons, tandem repeats and transposable elements compared to other lncRNAs.
-* LR lncRNAs are less tissue and cell type specific, more highly expressed and more highly correlated in expression to their neighbors compared to other lncRNAs.
+* LR lncRNAs are equally tissue and cell type specific, but more highly expressed and more highly correlated in expression to their neighbors compared to other lncRNAs.
 * LR lncRNAs are significantly more nuclear than other lncRNAs only in H1-hESC. In all other cell lines, they are as nuclear as other lncRNAs.
 * Local repeats found in lncRNAs (LRs) are significantly enriched at TAD boundaries and there is weak evidence for their colacalization in 3D.
 * There is a sharp increase in signal for chromatin marks - H3K4Me1, H3K4Me3 and H3K27Ac concurrently only in H1-hESC.
@@ -17,7 +17,7 @@ This repo contains code I have written to analyze hundreds of local repeats foun
 * ~~Make dot plot of mouse LRs versus human LRs. See if there are any similarities.~~
 * Distribution of exonic LRs in lncRNA transcripts. Are there lncRNA transcripts with only exonic LRs?
 * Get expression correlation of 5,000 ranodm pairs of neighboring mRNAs and compare that distribution to correlation of LR lncRNAs with their neighbor
-* Control for expression level while computing specificity.
+* ~~Control for expression level while computing specificity.~~
 * ~~Plot ratio of H3K4Me1/H3K4Me3 across body of LRs and test potential eRNAs in various methods.~~
 
 
