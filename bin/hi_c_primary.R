@@ -31,6 +31,33 @@ HiC_GM_chrX = do.call(rbind, df)
 save(HiC_GM_chrX,
      file=file.path(outputDir, "HiC_GM_chrX.RData"))
 
+###################################################
+## code chunk number 25: ChIPfiles (eval = FALSE)
+###################################################
+files = c("wgEncodeBroadChipSeqPeaksGm12878H3k27me3.broadPeak.gz", "wgEncodeBroadChipSeqPeaksGm12878H3k36me3.broadPeak.gz", "wgEncodeUwDnaseSeqHotspotsRep1Gm06990.broadPeak.gz", "wgEncodeUwDnaseSeqHotspotsRep2Gm06990.broadPeak.gz")
+
+
+###################################################
+## code chunk number 26: readtable (eval = FALSE)
+###################################################
+inputDir = "~/Downloads"
+outputDir = "~/Downloads"
+cs = vector(mode="list", length=length(files))
+for(i in seq(along=files)) {
+   cat("Reading file", i, "\n")
+   tab = read.table(gzfile(file.path(inputDir, files[i])),   header=FALSE, sep="\t", comment.char = "",   stringsAsFactors=FALSE)
+   colnames(tab) <- c("chr", "start", "end", "name", "score", "strand", "signalValue", "pValue", "qValue")
+   cs[[i]] = subset(tab, chr=="chr14")
+}
+ 
+H3K27me3.df = cs[[1]]
+H3K36me3.df = cs[[2]]
+DNAse1.df = cs[[3]]
+DNAse2.df = cs[[4]]
+ 
+save(list=c("H3K27me3.df", "H3K36me3.df", "DNAse1.df", "DNAse2.df"), file=file.path(outputDir, "ChipSeqData.RData"))
+
+
 head(HiC_GM_chrX)
 pos = with(HiC_GM_chrX, cbind(position1, position2))
 
@@ -136,5 +163,74 @@ pc1Vec = Rle(values  = princp$loadings[,1],
              lengths = c(den$x1[1], diff(den$x1)))
 pc2Vec = Rle(values  = princp$loadings[,2],
              lengths = c(den$x1[1], diff(den$x1)))
+
+###################################################
+### code chunk number 17: readChipseq
+###################################################
+createRleVector = function(tab){
+  RleVec = Rle(0, max(tab$end))
+  for(i in 1:nrow(tab)){
+    RleVec = RleVec + 
+      Rle(values  = c(0,              tab$signalValue[i],         0),
+          lengths = c(tab$start[i]-1,
+                    tab$end[i]-tab$start[i]+1,  
+                    length(RleVec)-tab$end[i]))
+  }
+  RleVec
+}
+
+
+###################################################
+### code chunk number 18: read
+###################################################
+data("ChipSeqData")
+H3K27me3 = createRleVector(H3K27me3.df)
+H3K36me3 = createRleVector(H3K36me3.df)
+DNAse1   = createRleVector(DNAse1.df)
+DNAse2   = createRleVector(DNAse2.df)
+
+
+###################################################
+### code chunk number 19: combinednase
+###################################################
+length(DNAse1)
+length(DNAse2)
+DNAse = DNAse1 + DNAse2[seq(along=DNAse1)]
+
+
+###################################################
+### code chunk number 20: plotRle
+###################################################
+plotRle = function(RleVector, ...){
+  plot(end(RleVector), runValue(RleVector)+1, type="h", log="y",
+  xlim = c(1.5e+7, 107000000), xlab="", ylab=deparse(substitute(RleVector)),
+  ...)
+}
+
+
+
+###################################################
+### code chunk number 21: figrle
+###################################################
+par(mfrow=c(4,1), mai=c(0.5,0.7,0.1,0.1))
+plotRle(pc1Vec)
+plotRle(H3K27me3)
+plotRle(H3K36me3)
+plotRle(DNAse1)
+
+
+###################################################
+### code chunk number 22: correlation
+###################################################
+c(length(H3K27me3),
+  length(H3K36me3),
+  length(DNAse),
+  length(pc1Vec))
+
+x = seq(along=H3K36me3)
+
+cor(H3K27me3[x], pc1Vec[x])
+cor(H3K36me3, pc1Vec[x])
+cor(DNAse[x], pc1Vec[x])
 
 
