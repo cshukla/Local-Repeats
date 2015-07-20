@@ -36,7 +36,6 @@ save(HiC_GM_chrX,
 ###################################################
 files = c("wgEncodeBroadChipSeqPeaksGm12878H3k27me3.broadPeak.gz", "wgEncodeBroadChipSeqPeaksGm12878H3k36me3.broadPeak.gz", "wgEncodeUwDnaseSeqHotspotsRep1Gm06990.broadPeak.gz", "wgEncodeUwDnaseSeqHotspotsRep2Gm06990.broadPeak.gz")
 
-
 ###################################################
 ## code chunk number 26: readtable (eval = FALSE)
 ###################################################
@@ -57,14 +56,13 @@ DNAse2.df = cs[[4]]
  
 save(list=c("H3K27me3.df", "H3K36me3.df", "DNAse1.df", "DNAse2.df"), file=file.path(outputDir, "ChipSeqData.RData"))
 
-
 head(HiC_GM_chrX)
 pos = with(HiC_GM_chrX, cbind(position1, position2))
 
 ##################################################
 ## Print Scatter Plot
 ##################################################
-pdf("~/Downloads/contact_map_chr14_erez_2009.pdf",width=1024,height=1024)
+pdf("~/Downloads/contact_map_chrX_erez_2009.pdf",width=1024,height=1024)
 plot(pos, pch='.', col="#77777777")
 dev.off()
 
