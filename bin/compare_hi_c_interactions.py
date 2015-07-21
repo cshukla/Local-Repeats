@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from optparse import OptionParser
-import glob, sys, tempfile, subprocess, os
+import sys, tempfile, subprocess, os
 
 ###########################################################################################
 # compare_hi_c_interactions.py
@@ -11,14 +11,14 @@ import glob, sys, tempfile, subprocess, os
 def main():
 	usage = 'usage:%prog [options] <labels> <normalized_matrice_files>'
 	parser = OptionParser(usage)
-	parser.add_option('-o', dest='out_file', default='bed_hi_c_matrices.txt', help='Output file to print normalized hi-c matrices for features in BED file [Default: %default]')
+	parser.add_option('-o', dest='out_pre', default='compare_hi_c_interactions', help='Prefix for output files comparing Hi-C interactions across conditions [Default: %default]')
 	(options, args) = parser.parse_args()
 
 	if len(args)!=2:
 		parser.error('Must provide comma-seperated labels and normalized matrix files\n %s' %(usage))
 	else:
-		labels = args[0].split(',')
-		normalized_matrice_files = args[1].split(',')
+		labels = args[0].strip().split(',')
+		normalized_matrice_files = args[1].strip().split(',')
 		if len(labels)!= len(normalized_matrice_files):
 			print >> sys.stderr, 'Must provide labels for each matrix file'
 
@@ -27,23 +27,24 @@ def main():
 		label = labels[i]
 		average_interactions = []
 		for line in open(normalized_matrice_files[i]):
-			bin_matrix = line.strip().split()
+			bin_matrix = line.strip().split()[1:]
 			for i in range(0, len(bin_matrix)):
-				bin_matrix = float(bin_matrix[i])
+				bin_matrix[i] = float(bin_matrix[i])
 			bin_average = sum(bin_matrix)/len(bin_matrix)
 			average_interactions.append(bin_average)
 		df[label] = average_interactions
+		print 'Finished reading interaction matrices for %s' %(label)
 
 	df_fd, df_file = tempfile.mkstemp()
-	df = open(df_file, 'w')
+	df_io = open(df_file, 'w')
 	for label in df.keys():
 		average_interactions = df[label]
 		for i in range(0, len(average_interactions)):
-			print >> df, '\t'.join(str(average_interactions[i]), label)
+			print >> df_io, '\t'.join([str(average_interactions[i]), label])
 
-	df.close()
-	r_script = 'compare_hi_c_interactions.R'
-	args_str = options.out_file
+	df_io.close()
+	r_script = '/Users/chinmayshukla/Documents/Research/Local-Repeats/bin/r_scripts/compare_hi_c_interactions.R'
+	args_str = options.out_pre
 	subprocess.call('R --slave --args %s %s < %s' % (df_file, args_str, r_script), shell=True)
 
 	os.close(df_fd)
