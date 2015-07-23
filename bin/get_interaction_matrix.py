@@ -83,7 +83,7 @@ def get_interaction_matrices(normalized_matrices, bin_size):
 		i = 1
 		for line in open(file_name):
 			bin_name = 'bin_' + str(i)
-			bin_matrix = line.strip().split()
+			bin_matrix = line.strip().split()[1:]
 			interaction_matrices[chrom][bin_name] = bin_matrix
 			i += 1
 
