@@ -2,7 +2,7 @@
 
 This repo contains code I have written to analyze hundreds of local repeats found in the human genome. Primarily, I am interested in understanding the role of local repeats in human lncRNAs.
 
-**Summary of the main findings so far (Updated - 7/9/15):**
+**Summary of the main findings so far (Updated - 7/22/15):**
 
 * In both the mouse and human genome, local repeats are significantly enriched in lncRNAs compared to mRNAs. There is only LR that is same in human and mouse.
 * Local repeat rich lncRNAs (LR lncRNAs) are longer, have more isoforms, exons, tandem repeats and transposable elements compared to other lncRNAs.
@@ -11,11 +11,11 @@ This repo contains code I have written to analyze hundreds of local repeats foun
 * Local repeats found in lncRNAs (LRs) are significantly enriched at TAD boundaries and there is weak evidence for their colacalization in 3D.
 * There is a sharp increase in signal for chromatin marks - H3K4Me1, H3K4Me3 and H3K27Ac concurrently only in H1-hESC. For a few LRs, the ratio of H3K4Me1/H3K4Me3 is greater than 3 suggesting potential enhancer like roles.
 * There is a sharp increase in conservation scores (phyloP) across LRs compared to the neighboring regions. 
+* LR elncRNAs have more 3D contacts than other lncRNAs and protein coding genes
 
-**Future things to Do (Updated - 7/9/15):**
+**Future things to Do (Updated - 7/22/15):**
 
 * Distribution of exonic LRs in lncRNA transcripts. Are there lncRNA transcripts with only exonic LRs?
-* Do LR lncRNAs have more 3D contacts than other lncRNAs and protein coding genes?
 * Explore eLR lncRNAs more and make a list of “enhancer LRs”, compare neeighboring genes correlation, specificity and expression.
 * For each category have a pony and or named lncRNA
 * Check LR lncRNA distribution in Sheq's fractionation data.
