@@ -27,7 +27,7 @@ def main():
 		label = labels[i]
 		average_interactions = []
 		for line in open(normalized_matrice_files[i]):
-			bin_matrix = line.strip().split()[1:]
+			bin_matrix = line.strip().split()
 			for i in range(0, len(bin_matrix)):
 				bin_matrix[i] = float(bin_matrix[i])
 			bin_average = sum(bin_matrix)/len(bin_matrix)
