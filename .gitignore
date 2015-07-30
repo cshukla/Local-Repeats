@@ -40,3 +40,8 @@ Thumbs.db
 ######################
 results
 results/*
+
+# Routine Shell Scripts #
+######################
+bin/shell_scripts
+bin/shell_scripts/*
