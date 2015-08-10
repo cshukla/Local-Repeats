@@ -26,6 +26,7 @@ def cleanFile(filename):
 
 def main():
     usage='usage:%prog [options]'
+    parser = OptionParser(usage)
     parser.add_option('-g', dest='genomeName', default="hg19", type=str, help='Name of the genome in HiC experiment')
     parser.add_option('-p', dest='threads', default=10, type=int, help='Number of threads used by Bowtie2 for mapping')
     parser.add_option('-b', dest='bowtiePath', default='/n/sw/bowtie2-2.0.5/bowtie2', type=str, help='Absolute path for Bowtie2')
@@ -35,6 +36,8 @@ def main():
     parser.add_option('-t', dest='tmpDir', default='/n/regal/rinn_lab/cshukla/hic', type=str, help='Scractch space for temporary files')
     parser.add_option('-d', dest='genome_db', default='/n/rinn_data1/users/cshukla/common/data/hg19/chrom_fasta', type=str, help='Directory with gap and genome FASTA files')
     parser.add_option('-c', dest='readChrms', default='#XYM', type=str, help='Chromosomes to read from genome database directory')
+    (options, args) = parser.parse_args()
+    
     genomeName = options.genomeName
     threads = options.threads
     bowtiePath = options.bowtiePath
