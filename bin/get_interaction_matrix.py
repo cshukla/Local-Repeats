@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 from optparse import OptionParser
 import glob, sys
+import numpy as np
+from mirnylib import h5dict
 
 ###########################################################################################
 # get_interaction_matrix.py
@@ -35,24 +37,27 @@ def main():
 		extract_from_matrices(bed_file, normalized_matrices, bin_size, out_file)
 
 def extract_from_heatmap(bed_file, normalized_matrices, out_file):
-	matrices = []
-	for line in bed_file:
+	heatmap = h5dict.h5dict(normalized_matrices, 'r')
+	bin_size = heatmap['resolution']
+	for line in open(bed_file, 'r'):
 		a = line.strip().split('\t')
-		   heatmap_key = '22 22'
+			heatmap_key = '22 22'
 		elif a[0] == 'chrY':
-		   heatmap_key = '23 23'
+			heatmap_key = '23 23'
+		elif a[0] == 'chrM':
+			heatmap_key = '24 24'
 		else:
-		   chrom_num = int(a[0][3:])
-		   heatmap_key = ' '.join([str(chrom_num - 1), str(chrom_num - 1)])
+			chrom_num = int(a[0][3:])
+			heatmap_key = ' '.join([str(chrom_num - 1), str(chrom_num - 1)])
 		start, end = int(a[1]), int(a[2])
 		bin_number = 1
 		pos = 1
 		while pos < end:
-		   bin_start = pos
-		   bin_end = pos + 39999
-		   pos += 40000
-		   bin_number += 1
-		matrices.append(heatmap[heatmap_key][bin_number].tolist())
+			bin_start = pos
+			bin_end = pos + resolution - 1
+			pos += resolution
+			bin_number += 1
+		print >> out_file, '\t'.join(map(str, list(heatmap[heatmap_key][bin_number])))
 
 def extract_from_matrices(bed_file, normalized_matrices, bin_size, out_file):
 	chrom_bins = make_chrom_bins(chrom_sizes, bin_size)
