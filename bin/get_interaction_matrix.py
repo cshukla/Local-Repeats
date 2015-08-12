@@ -28,7 +28,33 @@ def main():
 		normalized_matrices = args[2]
 		bin_size = options.bin_size
 		out_file = open(options.out_file, 'w')
-	
+
+	if normalized_matrices[-2:] == 'hm':
+		extract_from_heatmap(bed_file, normalized_matrices, out_file, bin_size)
+	else:
+		extract_from_matrices(bed_file, normalized_matrices, bin_size, out_file)
+
+def extract_from_heatmap(bed_file, normalized_matrices, out_file):
+	matrices = []
+	for line in bed_file:
+		a = line.strip().split('\t')
+		   heatmap_key = '22 22'
+		elif a[0] == 'chrY':
+		   heatmap_key = '23 23'
+		else:
+		   chrom_num = int(a[0][3:])
+		   heatmap_key = ' '.join([str(chrom_num - 1), str(chrom_num - 1)])
+		start, end = int(a[1]), int(a[2])
+		bin_number = 1
+		pos = 1
+		while pos < end:
+		   bin_start = pos
+		   bin_end = pos + 39999
+		   pos += 40000
+		   bin_number += 1
+		matrices.append(heatmap[heatmap_key][bin_number].tolist())
+
+def extract_from_matrices(bed_file, normalized_matrices, bin_size, out_file):
 	chrom_bins = make_chrom_bins(chrom_sizes, bin_size)
 	print >> sys.stderr, 'Divided each chromosome into bins of %i bps' %(bin_size)
 	interaction_matrices = get_interaction_matrices(normalized_matrices, bin_size)
