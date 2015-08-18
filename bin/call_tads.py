@@ -296,14 +296,14 @@ def GMMHMM(DI, datatype):
         model = hmm.GMMHMM(n_components = components, n_mix = i, n_iter = 2000,
                            thresh = 1e-10, covariance_type = 'full')
         # HMM Parameters
-        prior = model.startprob_
-        transmat = model.transmat_
-        K += np.prod(prior.shape)
-        K += np.prod(transmat.shape)
+        #prior = model.startprob_
+        #transmat = model.transmat_
+        #K += np.prod(prior.shape)
+        #K += np.prod(transmat.shape)
         
         # Training
         logging.info('Training ...')
-        model.fit([train_set])
+        model.fit(train_set)
         logging.info('Done!')
         
         logL = model.score(train_set)
