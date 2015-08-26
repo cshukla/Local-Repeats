@@ -45,3 +45,8 @@ results/*
 ######################
 bin/shell_scripts
 bin/shell_scripts/*
+
+# iPython working directory #
+######################
+.ipynb_checkpoints
+.ipynb_checkpoints/*
