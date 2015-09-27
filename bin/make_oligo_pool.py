@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from optparse import OptionParser
-import tempfile, subprocess
+import tempfile, subprocess, gzip
 
 ###################################################################
 # make_oligo_pool.py
@@ -9,6 +9,8 @@ import tempfile, subprocess
 # Input a BED file of genomic regions and size of tiling window. 
 # Output a MPRA pool with oligos tiling genomic region by 
 # specified window.
+#
+# UPS---Oligo---RE_Site---Barcode---UPS
 ##################################################################
 
 ##################################################################
@@ -19,6 +21,10 @@ def main():
 	usage = 'usage:%prog [options] <genomic_regions> <genome_fasta> <window_size>'
 	parser = OptionParser(usage)
 	parser.add_option('-l', dest='oligo_length', type = int, default=87, help='Length of the sequence in each oligo [Default: %default]')
+	parser.add_option('-r', dest='re_seq', default='GGTACCTCTAGA', help='Restriction enzyme site for each oligo [Default: %default]')
+	parser.add_option('-u', dest='univ_primer', default='ACTGGCCGCTTCACTG,AGATCGGAAGAGCGTCG', help='Universal primer site for each oligo [Default: %default]')
+	parser.add_option('-m', dest='microrna_seeds', default='hg19_microrna_seeds.gz', help='File with microrna seeds [Default: %default]')
+	parser.add_option('-c', dest='cut_sites', default='', help='Sequences recognized by restriction enzymes used for cloning [Default: %default]')
 	(options, args) = parser.parse_args()
 
 	if len(args)!=3:
@@ -28,10 +34,13 @@ def main():
 		genome_fasta = args[1]
 		window_size = int(args[2])
 
+	univ_primer = options.univ_primer.split(',')
 	tiled_regions = tile_genomic_regions(genomic_regions, window_size, options.oligo_length, genome_fasta)
+	#barcodes = get_barcodes(microrna_seeds, re_sites)
 	for i in range(0, len(tiled_regions)):
-		oligo_seq = tiled_regions[i]
-		seq_head = '>' + 'Oligo_' + str(i+1)
+		tiled_region = tiled_regions[i]
+		seq_head = '>' + 'Oligo_' + str(i+1) + '_' #+ barcodes[i]
+		oligo_seq = univ_primer[0] + tiled_region + options.re_seq #+ barcodes[i] + univ_primer[1]
 		print seq_head
 		print oligo_seq
 
@@ -77,6 +86,8 @@ def tile_genomic_regions(genomic_regions, window_size, oligo_length, genome_fast
 	os.remove(scratch_seq_file)
 
 	return tiled_regions
+
+#def get_barcodes():
 
 ##################################################################
 # 
